@@ -1,0 +1,103 @@
+前后端分离
+后端负责接口的开发，前端通过ajax调用后端的接口，将返回的数据渲染到页面
+
+如何和后端交互？
+通过ajax请求，请求后端的接口得到返回数据，后端会提供给前端接口文档，而过程中可能会出现一些问题（接口的报错）
+
+接口是如何开发的？
+后端开发的，通过后端语言进行接口的开发（php，java，net， ...）, 前端也提供服务端操作的技术nodejs
+
+什么是RESTful API?
+1，统一规范的接口地址
+2，统一规范的接口类型（GET,POST,PUT,PATCH,DELETE）
+3, 统一规范的返回状态
+   2xx: 成功请求
+    200 OK - [GET]：服务器成功返回用户请求的数据，该操作是幂等的（Idempotent）。
+    201 CREATED - [POST/PUT/PATCH]：用户新建或修改数据成功。
+    202 Accepted - [*]：表示一个请求已经进入后台排队（异步任务）
+    204 NO CONTENT - [DELETE]：用户删除数据成功。  (服务器成功处理，但没有返回任何数据)
+   4xx: 客户端错误
+    400 INVALID REQUEST - [POST/PUT/PATCH]：用户发出的请求有错误，服务器没有进行新建或修改数据的操作，该操作是幂等的。
+    401 Unauthorized - [*]：表示用户没有权限（令牌、用户名、密码错误）。
+    403 Forbidden - [*] 表示用户得到授权（与401错误相对），但是访问是被禁止的。
+    404 NOT FOUND - [*]：用户发出的请求针对的是不存在的记录，服务器没有进行操作，该操作是幂等的。
+    406 Not Acceptable - [GET]：用户请求的格式不可得（比如用户请求JSON格式，但是只有XML格式）。
+    410 Gone -[GET]：用户请求的资源被永久删除，且不会再得到的。
+    422 Unprocesable entity - [POST/PUT/PATCH] 当创建一个对象时，发生一个验证错误。
+   5xx: 服务端错误 
+    500 INTERNAL SERVER ERROR - [*]：服务器发生错误，用户将无法判断发出的请求是否成功。
+4，统一的错误返回格式
+    {
+        name: '错误名称代码',
+        message: '错误的具体消息',
+        code: 0
+    }
+
+跨域
+什么是跨域？
+跨域是指一个域下的文档或脚本试图去请求另一个域下的资源，这里跨域是广义的。
+
+什么是同源策略？
+同源策略是一种约定(只存在于客户端(浏览器))，由Netscape公司1995年引入浏览器，它是浏览器最核心也最基本的安全功能，如果缺少了同源策略，浏览器很容易受到XSS、CSFR等攻击。
+所谓同源是指"协议+域名+端口"三者相同，即便两个不同的域名指向同一个ip地址，也非同源。
+
+同源策略限制以下几种行为：
+1.) Cookie、LocalStorage 和 IndexDB 无法读取
+2.) DOM 和 Js对象无法获得
+3.) AJAX 请求不能发送
+
+跨域解决方案
+1、cors (跨域资源共享)
+2、jsonp
+3、iframe
+4、nginx代理跨域
+5、nodejs中间件代理跨域
+6、WebSocket协议跨域
+
+jsonp的实现原理
+jsonp就是利用了请求js不涉及跨域的特性，已经js是浏览器脚本语言的特性，动态生成script标签，指定url为接口地址，
+并且创建一个不会冲突的函数添加到window上，前端通过query参数将回掉函数的名称传递到后端，后端获取到名字，返回的内容
+就会执行js的形式返回 方法名（数据）
+缺点：
+只能是get请求，不能post，
+不安全
+需要后端配合
+
+cors跨域资源共享
+cors浏览器新增的跨域解决方案，需要客户端和服务端同时支持
+客户端：（浏览器版本）
+服务端：
+    res.header("Access-Control-Allow-Origin", "http://localhost:8080");  //允许跨域访问的网站 
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");   //允许的headers字段
+    res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");   //允许的请求方法
+    res.header("Access-Control-Allow-Credentials", true); //允许携带cookie
+    res.header("Content-Type", "application/json;charset=utf-8");   //接收到的内容格式
+
+优点：
+前端不需要做任何改变，只需要后端配置即可
+可以限制域名做请求
+可以跨域操作cookie
+
+缺点：
+兼容性问题
+
+
+代理跨域(反向代理，正向代理)
+首先跨域问题是出现在浏览器同源策略，所以在服务端做一个代理，将不同域名下的数据请求，然后在通过当前服务器转发过来
+
+在开发项目的时候如果是前后端分离，一定会有跨域问题，
+1，如果项目上线之后依然存在跨域问题（接口和前端项目分成了不同的服务器）
+可以用cors， 代理
+
+2，开发的时候是跨域而上线部署后没有了跨域问题？
+在开发的时候选用代理
+
+3，浏览器兼容处理的时候
+代理，jsonp
+
+
+在vue项目中可用通过配置proxyTable来完成代理设置
+
+
+
+

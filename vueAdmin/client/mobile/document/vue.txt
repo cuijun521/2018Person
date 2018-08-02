@@ -1,0 +1,133 @@
+1，Vue是什么？
+前端框架，Vue (读音 /vjuː/，类似于 view) 是一套用于构建用户界面的渐进式框架。
+
+框架：提供开发规则, 倾向于重量级一些，倾向于提供整套的解决方案，倾向于创造一些需要你来遵守的规则和范例，常见的框架（vue，react，angular）
+库：提供便捷的方法，供使用者调用（jquery，zepto，swiper，...）
+
+
+2，框架和框架直接的区别？
+规则不一样
+
+3，vue和react的相同点？
+组件化开发思想
+都有路由
+对于组件来说都有状态，通讯机制， 生命周期， 都是MVVM， 单向数据流， 用法一样
+都有虚拟DOM
+
+4，vue和react直接有什么区别？
+生周期不一样
+组件定义不一样
+vue有指令，vue有过滤器，vue有计算属性，vue区分了方法，数据，计算属性，watch
+react中只有生命周期和方法
+vue有双向绑定，react使用受控组件
+vue通过实例化vueRouter创建路由，react通过react-router-dom提供的路由相关组件定义路由
+react定义模板使用jsx，vue使用template模板
+
+react，vue， angular 诞生？
+angular  2009   
+react  2013   
+vue   2014  
+
+vueApi
+
+
+
+vue组件通讯？
+组件和组件之间的数据传递就是通讯，
+通讯场景有，父子通讯（子组件使用父组件的数据），子父通讯（父组件使用子组件的数据），同级通讯，跨级通讯
+通讯方式：
+父子: props ,  this.$parent获取父组件的实例
+子父: 自定义事件,  $children,  $refs
+同级：自定义事件（需要有一个定义事件的对象，并且触发的时候也是触发的定义事件的这个对象）
+跨级：自定义事件， props逐层传递
+
+自定义事件的问题就是如果定义的事件多了可能会造成事件的冲突
+
+
+$children,  $refs  的区别
+$children获取当前组件下所有子组件，没有先后顺序，返回的是一个数组，如果要查找的是当前组件下的某一个子组件比较复杂
+$refs获取到时通过ref映射后的对象，可以直接根据映射名称获取, ref也可以作用dom上获取到就是dom元素，作用组件上获取到的就是组件实例
+
+v-on:事件名称.修饰符
+缩写@
+作用在组件上就是自定义事件的意思，作用在dom元素上就是dom事件，也有通过.native修饰符作用在组件上的时候就是dom事件
+
+vue中的数据检测
+在data里面定义的数据可以被监听，通过props接收过来的数据，计算属性, vuex中的
+
+
+vue组件
+vue中的组件分为全局组件和局部组件
+全局组件使用  Vue.component('组件名称', 组件的配置选项(object)), 注册全局组件必须在vue实例化之前
+局部组件：需要在组件内部的components选项中注册才能使用
+
+组件和vue实例的区别?
+1，组件内部的data是函数返回一个对象
+2，组件内部可以接收props，实例没有
+3，路由一般都是挂载到实例上
+4，在vue单文件组件中template元素替代了template属性
+5，在vue组件中可以使用$root获取到根实例，而要获取组件实例需要使用$ref，或者$children
+
+组件化和模块化的区别？
+首先不管是组件化也好模块化也好他们的目的都是为了代码的“解耦”
+
+模块化的目的是为了解耦js逻辑，将每一个js文件划分成不同的模块（模块定义），每个模块都会抛出接口供其他模块使用（抛出接口），模块和模块之间可以通过引入的方式进行调用（依赖注入）
+组件化：和模块基本差不多，组件中包含了逻辑（js），结构（html），样式（css），组件的复用性更高
+组件的划分
+（展示组件，业务组件，容器组件（木偶组件，路由组件））
+
+组件和组件之间通过数据进行通信（父子，子父，同级，跨级）
+
+组件和组件之间也可以进行组合（嵌套），在vue里面通过<slot></slot>元素来做组件的嵌套
+
+vue中内置了很多内置组件？
+slot, template，keep-alive, transition, transition-group, component
+
+单向数据流prop
+prop是调用组件的时候父组件传递给子组件的参数，prop的可以是静态属性也可以是动态属性，需要在组件内部通过props接收
+如果不接受就会被当成元素属性添加到当前组件的根节点元素的属性。
+如果是静态属性  name="aaaa"
+如果是动态属性  v-bind:name="表达式"  或者 :name="表达式"
+在组件内容props的属性值可以是数组，也可以是对象， 如果是数组的话就是单纯接收
+如果是对象的话可以设置值的类型，默认值，验证， 如果不通过在开发环境下会报出警告warn
+但是动态prop有个限制默认在prop的表达式里面是去组件的data，props，computd，methods查找，其他的不会，但是
+可以使用js内置对象Math, Array, Object, Date, parseInt, parseFloat
+
+在props中如果要设置默认值，使用defalut属性，值如果是数组或者对象使用函数返回，其他直接定义即可
+
+在vue组件实例化的时候是先有的props，后有的data，所以在data中可以读取props中的属性
+在组件调用的时候添加的属性，如果在组件内部通过props接收了，就会当成props值。如果没有接收就会当成元素属性添加到组件的根元素上
+如果是元素的话需要注意class的话会在原来属性class的基础上添加（style也是），但是其他都会是替换
+
+组件的事件
+在组件上使用 v-on:事件名称="回调函数", 在组件内容使用$emit('事件名称', 参数) 触发
+
+v-model
+v-model是事件的语法糖，
+作用在组件上就相当于绑定了一个vlaue熟悉，绑定了input事件，在组件内部可以通过props接收value，$emit触发input
+<component v-model="aa" />  ==  <component :value="aa" @input="aa = arguments[0]" />
+作用在input元素上
+<input type="text" v-model="val" /> == <input type="text" :value="val" @input="val = $event.target.value" />
+但是作用在input元素上如果input元素是checkbox的话（一个）那么value值会被绑定为布尔值 （两个）会被绑定为[]
+
+
+
+vue中如何操作dom
+1, ref作用到dom元素上，可以使用$refs获取到
+2, 在vue中操作dom必须写在mounted生命周期之后
+3, 在vuedom事件中，事件回调函数中的this指的不在是dom元素了，如果要获取dom需要使用e.target
+4，el指定组件的渲染容器，$el获取组件的根节点，使用$mount可以代替el属性做挂载处理
+5，指令（控制dom的循环输出，添加事件，绑定属性，显示隐藏，渲染）
+
+自定义指令
+两种方法
+全局（Vue.directive('指令名称'， {
+    bind () {},
+    inserted () {},
+    update () {},
+    componentUpdated () {},
+    unbind () {}
+})）
+局部：组件的directives属性
+
+指令的作用：操作dom
